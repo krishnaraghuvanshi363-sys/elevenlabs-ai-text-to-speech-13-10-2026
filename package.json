@@ -1,0 +1,25 @@
+{
+  "name": "ai-text-to-speech",
+  "version": "1.0.0",
+  "description": "Beginner-friendly AI Text-to-Speech web application powered by ElevenLabs API",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "elevenlabs",
+    "text-to-speech",
+    "tts",
+    "express",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}

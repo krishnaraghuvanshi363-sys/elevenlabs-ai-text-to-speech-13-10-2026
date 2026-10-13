@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Text-to-Speech | Powered by ElevenLabs</title>
+  <meta name="description" content="Convert any text into realistic, high-quality spoken audio using ElevenLabs AI text-to-speech models.">
+  
+  <!-- Google Fonts: Inter & Outfit for modern, clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/></svg>">
+</head>
+<body>
+  <!-- Background decorative glowing orbs for modern glassmorphism effect -->
+  <div class="ambient-glow glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+  <!-- Main Container -->
+  <main class="app-wrapper">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="brand-badge">
+        <span class="pulse-dot"></span>
+        <span>ElevenLabs AI Voice Engine</span>
+      </div>
+      <h1 class="main-title">AI Text-to-Speech</h1>
+      <p class="description">
+        Convert your text into realistic, lifelike spoken audio using state-of-the-art
+        ElevenLabs neural voice models. Ideal for presentations, audiobooks, and accessibility.
+      </p>
+    </header>
+
+    <!-- Main Card -->
+    <section class="generator-card" aria-label="Speech Generator Form">
+      <!-- Error Message Banner (Hidden by default, shown on error) -->
+      <div id="errorBanner" class="alert-banner alert-error hidden" role="alert" aria-live="assertive">
+        <div class="alert-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+        </div>
+        <div class="alert-content">
+          <strong id="errorTitle">Request Failed</strong>
+          <span id="errorMessage">An unexpected error occurred.</span>
+        </div>
+        <button id="dismissErrorBtn" class="alert-close" type="button" aria-label="Dismiss error message">&times;</button>
+      </div>
+
+      <!-- Success Notification Banner -->
+      <div id="successBanner" class="alert-banner alert-success hidden" role="status" aria-live="polite">
+        <div class="alert-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <div class="alert-content">
+          <strong id="successTitle">Audio Ready!</strong>
+          <span id="successMessage">Speech generated successfully. Listen below.</span>
+        </div>
+      </div>
+
+      <!-- Input Form -->
+      <form id="ttsForm" novalidate>
+        
+        <!-- Text Input Area -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="textInput" class="form-label">
+              <span>Text to Speak</span>
+              <span class="required-star">*</span>
+            </label>
+            <div class="char-counter" id="charCounter">0 / 5,000 characters</div>
+          </div>
+
+          <div class="textarea-wrapper">
+            <textarea
+              id="textInput"
+              name="text"
+              class="form-textarea"
+              rows="5"
+              placeholder="Paste or type any text you want to convert to speech..."
+              maxlength="5000"
+              required
+            ></textarea>
+
+            <!-- Quick Action Tools: Clear Text & Quick Samples -->
+            <div class="textarea-footer">
+              <div class="sample-pills">
+                <span class="sample-label">Quick Samples:</span>
+                <button type="button" class="sample-pill" data-sample="Hello! Welcome to our university AI class activity. We are synthesizing voice in real-time with ElevenLabs!">Welcome</button>
+                <button type="button" class="sample-pill" data-sample="In the near future, artificial intelligence and neural speech synthesis will transform how humanity learns, communicates, and shares knowledge.">Future AI</button>
+                <button type="button" class="sample-pill" data-sample="Deep in the enchanted forest, ancient trees whispered forgotten secrets to the passing evening breeze.">Storytelling</button>
+              </div>
+              <button type="button" id="clearTextBtn" class="clear-btn" title="Clear text area">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Grid: Model & Voice Selection -->
+        <div class="controls-grid">
+          <!-- Model Selection Dropdown -->
+          <div class="form-group">
+            <label for="modelSelect" class="form-label">
+              <span>ElevenLabs Model</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="modelSelect" name="model" class="form-select">
+                <option value="eleven_multilingual_v2" selected>
+                  Eleven Multilingual v2 (High Quality, 29 Languages)
+                </option>
+                <option value="eleven_flash_v2_5">
+                  Eleven Flash v2.5 (Fastest Latency, 32 Languages)
+                </option>
+                <option value="eleven_turbo_v2_5">
+                  Eleven Turbo v2.5 (High Speed Developer Choice)
+                </option>
+                <option value="eleven_monolingual_v1">
+                  Eleven Monolingual v1 (Classic English)
+                </option>
+              </select>
+              <div class="select-chevron" aria-hidden="true">▼</div>
+            </div>
+            <p class="field-hint" id="modelDesc">
+              Our most natural, emotionally rich mode across 29 languages.
+            </p>
+          </div>
+
+          <!-- Voice Selection Dropdown -->
+          <div class="form-group">
+            <label for="voiceSelect" class="form-label">
+              <span>Narration Voice</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="voiceSelect" name="voice" class="form-select">
+                <option value="JBFqnCBsd6RMkjVDRZzb" selected>George - Warm & Storyteller (Male)</option>
+                <option value="EXAVITQu4vr4xnSDxMaL">Sarah - Mature, Reassuring & Confident (Female)</option>
+                <option value="21m00Tcm4TlvDq8ikWAM">Rachel - Calm, Clear & Professional (Female)</option>
+                <option value="IKne3meq5aSn9XLyUdCD">Charlie - Deep & Energetic (Male)</option>
+                <option value="CwhRBWXzGAHq8TQ4Fs17">Roger - Laid-Back & Casual (Male)</option>
+                <option value="FGY2WhTYpPnrIDTdsKH5">Laura - Enthusiast & Expressive (Female)</option>
+              </select>
+              <div class="select-chevron" aria-hidden="true">▼</div>
+            </div>
+            <p class="field-hint">Select a voice persona for your narration.</p>
+          </div>
+        </div>
+
+        <!-- Action Button Section -->
+        <div class="action-row">
+          <button type="submit" id="generateBtn" class="generate-btn">
+            <!-- Normal State: Play / Sparkles Icon + Text -->
+            <span class="btn-content default-state">
+              <svg class="btn-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span>Generate Speech</span>
+            </span>
+
+            <!-- Loading State: Spinner + Text -->
+            <span class="btn-content loading-state hidden">
+              <span class="spinner" aria-hidden="true"></span>
+              <span>Generating Audio...</span>
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Loading Indicator Card (Visual audio synthesis waves) -->
+      <div id="loadingIndicator" class="loading-container hidden" aria-live="polite">
+        <div class="audio-waves" aria-hidden="true">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+        <p class="loading-text">Synthesizing voice with ElevenLabs AI...</p>
+        <p class="loading-subtext">This typically takes 1 to 3 seconds.</p>
+      </div>
+
+      <!-- Generated Audio Player Section -->
+      <div id="audioSection" class="audio-section hidden">
+        <div class="audio-card-header">
+          <div class="audio-info">
+            <div class="audio-icon-badge">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="audio-title">Generated Audio</h3>
+              <p class="audio-subtitle" id="audioMeta">Ready to play</p>
+            </div>
+          </div>
+          
+          <!-- Download Button -->
+          <a id="downloadAudioBtn" class="download-btn" href="#" download="elevenlabs-speech.mp3" title="Download MP3">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+            </svg>
+            <span>Download MP3</span>
+          </a>
+        </div>
+
+        <!-- Native HTML5 Audio Player with custom sleek wrapper -->
+        <div class="player-wrapper">
+          <audio id="audioPlayer" controls preload="auto" class="native-player">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational Guide Card: Explaining Architecture for Beginners -->
+    <section class="educational-card">
+      <h2 class="educational-title">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        </svg>
+        How This Application Works (Classroom Architecture)
+      </h2>
+      <div class="architecture-steps">
+        <div class="step-card">
+          <span class="step-num">1</span>
+          <h4>Frontend Input</h4>
+          <p>The user inputs text and selects a model. The browser validates that text is not empty.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-num">2</span>
+          <h4>Secure Server Bridge</h4>
+          <p>The browser sends a request to <code>/api/text-to-speech</code>. The API key stays protected on the backend.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-num">3</span>
+          <h4>ElevenLabs API</h4>
+          <p>The backend requests the ElevenLabs API using the server environment variable <code>ELEVENLABS_API_KEY</code>.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-num">4</span>
+          <h4>Browser Playback</h4>
+          <p>Audio is returned as an MP3 audio stream, loaded into an HTML5 audio element, and played instantly.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>AI Text-to-Speech Educational Web Application &bull; Powered by ElevenLabs</p>
+    </footer>
+  </main>
+
+  <!-- Frontend JavaScript Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# ==============================================================================
+# NETLIFY CONFIGURATION FILE (netlify.toml)
+# ==============================================================================
+# This configuration file specifies build settings and serverless routing
+# for deploying the AI Text-to-Speech application on Netlify.
+# ==============================================================================
+
+[build]
+  # Directory containing public web assets (HTML, CSS, JS)
+  publish = "public"
+
+  # Directory containing serverless functions
+  functions = "netlify/functions"
+
+# ------------------------------------------------------------------------------
+# API Route Redirections
+# ------------------------------------------------------------------------------
+# Redirect calls from /api/text-to-speech to the serverless function
+[[redirects]]
+  from = "/api/text-to-speech"
+  to = "/.netlify/functions/text-to-speech"
+  status = 200
+  force = true
+
+# Fallback for SPA routing if needed
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
